@@ -35,6 +35,8 @@ local nvals_terrain = {}
 -- mapchunks, therefore minimising memory use.
 local data = {}
 
+-- Whether the 'biomegen' mod exists.
+local use_biomegen = minetest.get_modpath('biomegen')
 
 -- On generated function.
 
@@ -113,8 +115,15 @@ minetest.register_on_generated(function(minp, maxp, seed)
 	end
 	end
 
-	-- After processing, write content ID data back to the voxelmanip.
-	vm:set_data(data)
+	if use_biomegen then
+		-- Generate biomes, decorations, ores and dust using biomegen.
+		-- It will also call :set_data() for us.
+		biomegen.generate_all(data, area, vm, minp, maxp, seed)
+	else
+		-- After processing, write content ID data back to the voxelmanip.
+		vm:set_data(data)
+	end
+
 	-- Calculate lighting for what has been created.
 	vm:calc_lighting()
 	-- Write what has been created to the world.
