@@ -1,5 +1,4 @@
 -- Set the 3D noise parameters for the terrain.
-
 local np_terrain = {
 	offset = 0,
 	scale = 1,
@@ -11,35 +10,28 @@ local np_terrain = {
 	--flags = ""
 }
 
-
 -- Set singlenode mapgen (air nodes only).
 -- Disable the engine lighting calculation since that will be done for a
 -- mapchunk of air nodes and will be incorrect after we place nodes.
-
 minetest.set_mapgen_params({mgname = "singlenode", flags = "nolight"})
 
-
 -- Get the content IDs for the nodes used.
-
-local c_sandstone = minetest.get_content_id("default:sandstone")
-local c_water     = minetest.get_content_id("default:water_source")
-
+local c_stone, c_water
+minetest.register_on_mods_loaded(function()
+	c_stone = minetest.get_content_id("mapgen_stone")
+	c_water = minetest.get_content_id("mapgen_water_source")
+end)
 
 -- Initialize noise object to nil. It will be created once only during the
 -- generation of the first mapchunk, to minimise memory use.
-
 local nobj_terrain = nil
-
 
 -- Localise noise buffer table outside the loop, to be re-used for all
 -- mapchunks, therefore minimising memory use.
-
 local nvals_terrain = {}
-
 
 -- Localise data buffer table outside the loop, to be re-used for all
 -- mapchunks, therefore minimising memory use.
-
 local data = {}
 
 
@@ -104,7 +96,7 @@ minetest.register_on_generated(function(minp, maxp, seed)
 			local density_gradient = (1 - y) / 128
 			-- Place solid nodes when 'density' > 0.
 			if density_noise + density_gradient > 0 then
-				data[vi] = c_sandstone
+				data[vi] = c_stone
 			-- Otherwise if at or below water level place water.
 			elseif y <= 1 then
 				data[vi] = c_water
