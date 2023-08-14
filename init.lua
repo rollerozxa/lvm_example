@@ -13,7 +13,8 @@ local np_terrain = {
 -- Set singlenode mapgen (air nodes only).
 -- Disable the engine lighting calculation since that will be done for a
 -- mapchunk of air nodes and will be incorrect after we place nodes.
-minetest.set_mapgen_params({mgname = "singlenode", flags = "nolight"})
+minetest.set_mapgen_setting("mgname", "singlenode", true)
+minetest.set_mapgen_setting("flags", "nolight", true)
 
 -- Get the content IDs for the nodes used.
 local c_stone, c_water
@@ -42,7 +43,7 @@ local data = {}
 minetest.register_on_generated(function(minp, maxp, seed)
 	-- Start time of mapchunk generation.
 	local t0 = os.clock()
-	
+
 	-- Noise stuff.
 
 	-- Side length of mapchunk.
@@ -56,7 +57,7 @@ minetest.register_on_generated(function(minp, maxp, seed)
 	-- Create a flat array of noise values from the perlin map, with the
 	-- minimum point being 'minp'.
 	-- Set the buffer parameter to use and reuse 'nvals_terrain' for this.
-	nobj_terrain:get3dMap_flat(minp, nvals_terrain)
+	nobj_terrain:get_3d_map_flat(minp, nvals_terrain)
 
 	-- Voxelmanip stuff.
 
@@ -123,5 +124,5 @@ minetest.register_on_generated(function(minp, maxp, seed)
 
 	-- Print generation time of this mapchunk.
 	local chugent = math.ceil((os.clock() - t0) * 1000)
-	print ("[lvm_example] Mapchunk generation time " .. chugent .. " ms")
+	print("[lvm_example] Mapchunk generation time " .. chugent .. " ms")
 end)
