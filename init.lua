@@ -13,8 +13,8 @@ local np_terrain = {
 -- Set singlenode mapgen (air nodes only).
 -- Disable the engine lighting calculation since that will be done for a
 -- mapchunk of air nodes and will be incorrect after we place nodes.
-minetest.set_mapgen_setting("mgname", "singlenode", true)
-minetest.set_mapgen_setting("flags", "nolight", true)
+minetest.set_mapgen_setting("mg_name", "singlenode", true)
+minetest.set_mapgen_setting("mg_flags", "nolight", true)
 
 -- Get the content IDs for the nodes used.
 local c_stone, c_water
