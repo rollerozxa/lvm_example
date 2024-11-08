@@ -13,14 +13,14 @@ local np_terrain = {
 -- Set singlenode mapgen (air nodes only).
 -- Disable the engine lighting calculation since that will be done for a
 -- mapchunk of air nodes and will be incorrect after we place nodes.
-minetest.set_mapgen_setting("mg_name", "singlenode", true)
-minetest.set_mapgen_setting("mg_flags", "nolight", true)
+core.set_mapgen_setting("mg_name", "singlenode", true)
+core.set_mapgen_setting("mg_flags", "nolight", true)
 
 -- Get the content IDs for the nodes used.
 local c_stone, c_water
-minetest.register_on_mods_loaded(function()
-	c_stone = minetest.get_content_id("mapgen_stone")
-	c_water = minetest.get_content_id("mapgen_water_source")
+core.register_on_mods_loaded(function()
+	c_stone = core.get_content_id("mapgen_stone")
+	c_water = core.get_content_id("mapgen_water_source")
 end)
 
 -- Initialize noise object to nil. It will be created once only during the
@@ -36,13 +36,13 @@ local nvals_terrain = {}
 local data = {}
 
 -- Whether the 'biomegen' mod exists.
-local use_biomegen = minetest.get_modpath('biomegen')
+local use_biomegen = core.get_modpath('biomegen')
 
 -- On generated function.
 
 -- 'minp' and 'maxp' are the minimum and maximum positions of the mapchunk that
 -- define the 3D volume.
-minetest.register_on_generated(function(minp, maxp, seed)
+core.register_on_generated(function(minp, maxp, seed)
 	-- Start time of mapchunk generation.
 	local t0 = os.clock()
 
@@ -55,7 +55,7 @@ minetest.register_on_generated(function(minp, maxp, seed)
 	-- Create the perlin map noise object once only, during the generation of
 	-- the first mapchunk when 'nobj_terrain' is 'nil'.
 	nobj_terrain = nobj_terrain or
-		minetest.get_perlin_map(np_terrain, permapdims3d)
+		core.get_perlin_map(np_terrain, permapdims3d)
 	-- Create a flat array of noise values from the perlin map, with the
 	-- minimum point being 'minp'.
 	-- Set the buffer parameter to use and reuse 'nvals_terrain' for this.
@@ -65,7 +65,7 @@ minetest.register_on_generated(function(minp, maxp, seed)
 
 	-- Load the voxelmanip with the result of engine mapgen. Since 'singlenode'
 	-- mapgen is used this will be a mapchunk of air nodes.
-	local vm, emin, emax = minetest.get_mapgen_object("voxelmanip")
+	local vm, emin, emax = core.get_mapgen_object("voxelmanip")
 	-- 'area' is used later to get the voxelmanip indexes for positions.
 	local area = VoxelArea:new{MinEdge = emin, MaxEdge = emax}
 	-- Get the content ID data from the voxelmanip in the form of a flat array.
